@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title') Surat Balasan KNKPL @endsection
+@section('title') Surat Balasan PUPN @endsection
 
 @push('css')
 <style>
@@ -27,7 +27,7 @@
 @endif
 <div class="card mb-3">
     <div class="card-header">
-        <b>Form Surat Balasan KNKPL</b>
+        <b>Form Surat Balasan PUPN</b>
     </div>
     <div class="card-body">
         <form action="{{url('/admin/balasan-knkpl')}}" method="POST" enctype="multipart/form-data">
@@ -40,8 +40,8 @@
                         <select name="usulans_id" id="usulans_id" class="form-control @error('usulans_id') is-invalid @enderror">
                             <option value="">Pilih No Surat Usulan</option>
                             @foreach ($skpd as $item)
-                                @if ($item->nomor_surat != null)
-                                    <option value="{{$item->id}}">{{$item->nomor_surat}}</option>
+                                @if ($item->nomor_surat != null && $item->balasanKnkpl->count() == 0)
+                                    <option value="{{$item->nomor_surat}}">{{$item->nomor_surat}}</option>
                                 @endif
                             @endforeach
                         </select>
@@ -61,7 +61,7 @@
                 <div class="col-md-6">
                     <div class="form-group">
                         <label for="">Nomor Surat Balasan</label>
-                        <input type="text" value="{{\App\Models\SuratBalasanKNKPL::generateBalasan()}}" name="nomor_balasan" id="nomor_balasan" class="form-control @error('nomor_balasan') is-invalid @enderror">
+                        <input type="text"  name="nomor_balasan" id="nomor_balasan" class="form-control @error('nomor_balasan') is-invalid @enderror">
                         @error('nomor_balasan')
                         <div class="invalid-feedback">
                             {{$message}}
@@ -71,7 +71,7 @@
                 </div>
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label for="">Tanggal Surat Usulan</label>
+                        <label for="">Tanggal Surat Balasan</label>
                         <input type="date" name="tgl_balasan" id="tgl_balasan" class="form-control @error('tgl_balasan') is-invalid @enderror">
                         @error('tgl_balasan')
                         <div class="invalid-feedback">
@@ -82,14 +82,24 @@
                 </div>
             </div>
             <div class="form-group">
-                <label for="">Upload Dokumen Usulan</label>
-                <input type="file" name="docs_balasan" class="form-control @error('docs_balasan') is-invalid @enderror">
+                <label for="">Perihal Dokumen</label>
+                <textarea name="rincian_balasan" id="rincian_balasan" class="form-control @error('rincian_balasan') is-invalid @enderror" cols="20" rows="3"></textarea>
+                @error('rincian_balasan')
+                <div class="invalid-feedback">
+                    {{$message}}
+                </div>
+                @enderror
+            </div>
+            <div class="form-group">
+                <label for="">Upload Dokumen </label>
+                <input type="file" name="docs_balasan" accept="application/pdf" class="form-control @error('docs_balasan') is-invalid @enderror">
                 @error('docs_balasan')
                 <div class="invalid-feedback">
                     {{$message}}
                 </div>
                 @enderror
             </div>
+
             <div class="form-group">
                 <label for="">Pesan</label>
                 <textarea name="message" id="message" class="form-control @error('message') is-invalid @enderror" cols="20" rows="10"></textarea>
@@ -118,5 +128,9 @@
         .catch(error => {
             console.error(error);
         });
+
+        $(function(){
+            $("#usulans_id").val("{{ app('request')->input('no_surat') }}").trigger('change');
+        })
 </script>
 @endpush

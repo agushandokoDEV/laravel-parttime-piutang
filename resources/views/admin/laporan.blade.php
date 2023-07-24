@@ -21,8 +21,7 @@
                         <th colspan="3" class="bg-warning text-white">Usulan Ke BPKD</th>
                         <th colspan="3" class="bg-info text-white">Rincian Piutang</th>
                         <th rowspan="2" class="bg-info text-white">Berita Acara</th>
-                        <th colspan="2" class="bg-success text-white">Usulan KNKPL</th>
-                        {{-- <th colspan="2" class="bg-success text-white">Balasan KNKPL</th>
+                        {{-- <th colspan="2" class="bg-success text-white">Balasan PUPN</th>
                             <th colspan="2" class="bg-success text-white">Pembayaran</th>
                             <th colspan="2" class="bg-success text-white">Keputusan</th> --}}
                     </tr>
@@ -33,10 +32,11 @@
                         <th class="bg-info text-white">Pokok</th>
                         <th class="bg-info text-white">Denda</th>
                         <th class="bg-info text-white">Total</th>
-                        <th class="bg-success text-white">Tanggal</th>
-                        <th class="bg-success text-white">Nomor Usulan KNKPL : </th>
-                        <th class="bg-success text-white">Tanggal Balasan KNKPL : </th>
-                        <th class="bg-success text-white">Nomor Balasan KNKPL : </th>
+                        <th class="bg-success text-white">Pengguna :</th>
+                        <th class="bg-success text-white">Tanggal Usulan PUPN :</th>
+                        <th class="bg-success text-white">Nomor Usulan PUPN : </th>
+                        <th class="bg-success text-white">Tanggal Balasan PUPN : </th>
+                        <th class="bg-success text-white">Nomor Balasan PUPN : </th>
                         <th class="bg-danger text-white">Tanggal Pembayaran : </th>
                         <th class="bg-danger text-white">Nilai Pembayaran : </th>
                         <th class="bg-primary text-white">Tanggal Keputusan Gubernur : </th>
@@ -46,45 +46,73 @@
                 </thead>
                 <tbody>
                     @foreach($data as $piutang)
-                        @if($piutang->docs_balasan != null)
-                            @php
-                                $dueDate = \Carbon\Carbon::parse($piutang->tgl_surat);
-                                $currDate = \Carbon\Carbon::now();
+                        @php
+                            $dueDate = \Carbon\Carbon::parse($piutang->tgl_surat);
+                            $currDate = \Carbon\Carbon::now();
 
-                                $year = $currDate->diffInYears($dueDate);
-                                $denda = 50000;
-                                $total_denda = $year * $denda;
-                            @endphp
-                            <tr>
-                                <td>{{$piutang->nama_peminjam}}</td>
-                                <td>{{$piutang->jenis}}</td>
+                            $year = $currDate->diffInYears($dueDate);
+                            $denda = 50000;
+                            $total_denda = $year * $denda;
+                        @endphp
+                        <tr>
+                            <td>{{$piutang->nama_peminjam}}</td>
+                            <td>{{$piutang->jenis}}</td>
+
+
+                            @if($piutang->tgl_surat != null)
                                 <td>{{\Carbon\Carbon::parse($piutang->tgl_surat)->translatedFormat('d-F-Y')}}</td>
-                                <td>{{$piutang->no_skrd}}</td>
-                                <td>{{number_format($piutang->nilai_rincian,0,'','.')}}</td>
+                            @else
                                 <td></td>
-                                <td>{{number_format($piutang->total_rincian + $total_denda,0,'','.')}}</td>
-                                <td>{{$piutang->judul}}</td>
+                            @endif
+                            
+
+                            <td>{{$piutang->nomor_surat}}</td>
+                            <td>{{number_format($piutang->nilai_rincian,0,'','.')}}</td>
+                            <td></td>
+                            <td>{{number_format($piutang->total_rincian,0,'','.')}}</td>
+                            <td>{{$piutang->judul}}</td>
+
+                            <td>{{$piutang->name}}</td>
+                            @if($piutang->tgl_knkpl != null)
                                 <td>{{\Carbon\Carbon::parse($piutang->tgl_knkpl)->translatedFormat('d-F-Y')}}</td>
-                                <td>{{$piutang->nomor_knkpl}}</td>
+                            @else
+                                <td></td>
+                            @endif
+
+                            <td>{{$piutang->nomor_knkpl}}</td>
+
+                            
+                            @if($piutang->tgl_balasan != null)
                                 <td>{{\Carbon\Carbon::parse($piutang->tgl_balasan)->translatedFormat('d-F-Y')}}</td>
-                                <td>{{$piutang->nomor_balasan}}</td>
-                                @if($piutang->tgl_bayar != null)
-                                    <td>{{\Carbon\Carbon::parse($piutang->tgl_bayar)->translatedFormat('d-F-Y')}}</td>
-                                @else
-                                    <td></td>
-                                @endif
-                                <td>{{number_format($piutang->nominal_bayar,0,'','.')}}</td>
+                            @else
+                                <td></td>
+                            @endif
+
+                            <td>{{$piutang->nomor_balasan}}</td>
+                            
+                            @if($piutang->tgl_bayar != null)
+                                <td>{{\Carbon\Carbon::parse($piutang->tgl_bayar)->translatedFormat('d-F-Y')}}</td>
+                            @else
+                                <td></td>
+                            @endif
+                            <td>{{number_format($piutang->nominal_bayar,0,'','.')}}</td>
+
+                            
+                            @if($piutang->tgl_keputusan != null)
                                 <td>{{\Carbon\Carbon::parse($piutang->tgl_keputusan)->translatedFormat('d-F-Y')}}</td>
-                                <td>{{$piutang->nomor_keputusan}}</td>
-                                <td>
-                                    @if ($piutang->count_sts > 0 && $piutang->count_st > 0 && $piutang->count_dl > 0)
-                                        <span class="badge badge-success p-2">Terpenuhi</span>
-                                    @else
-                                        <span class="badge badge-danger p-2">Tidak Terpenuhi</span>
-                                    @endif
-                                </td>
-                            </tr>
-                        @endif
+                            @else
+                                <td></td>
+                            @endif
+                            
+                            <td>{{$piutang->nomor_keputusan}}</td>
+                            <td>
+                                @if ($piutang->count_sts > 0 && $piutang->count_st > 0 && $piutang->count_dl > 0)
+                                    <span class="badge badge-success p-2">Terpenuhi</span>
+                                @else
+                                    <span class="badge badge-danger p-2">Tidak Terpenuhi</span>
+                                @endif
+                            </td>
+                        </tr>
                     @endforeach
                 </tbody>
             </table>

@@ -57,13 +57,13 @@
                     <label for="inputState" class="form-label">Dokumen Pendukung Lainnya (tidak menjadi syarat dalam Pergub 148 Tahun 2018)</label>
                     <select name="select_DL" class="form-control @error('select_DL') is-invalid @enderror">
                         <option selected></option>
-                        <option>Surat Permohonan Pengunduran Diri Sewa Lahan ex Pool PPD Depo H Kramat Jati, Jakarta Timur</option>
                         <option>Foto Dokumentasi</option>
                         <option>Surat Keterangan Kronologi Terjadinya Usulan Penghapusan Piutang di Tanda tangani oleh penyerah piutang</option>
                         <option>Daftar Rincian Dokumen yang disampaikan </option>
                         <option>Resume Usulan Penyerahan Penghapusan Piutang Daerah sesuai pasal 10 </option>
                         <option>Kartu Inventaris Barang (KIB A)</option>
                         <option>Dokumen rekomendasi TLHP BPK</option>
+                        <option>Lainnya</option>
                     </select>
                     @error('select_DL')
                      <div class="invalid-feedback">

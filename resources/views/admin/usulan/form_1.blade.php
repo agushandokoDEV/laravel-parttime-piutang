@@ -62,7 +62,7 @@
                     </div>
                     <div class="col-md-4">
                         <div class="form-group">
-                            <label for="">Nilai Rincian</label>
+                            <label for="">Nilai Rincian Piutang </label>
                             <input type="number" name="nilai_rincian" readonly id="nilai_rincian" value="{{number_format($data->nilai_rincian,0,'','.')}}" class="form-control @error('nilai_rincian') is-invalid @enderror">
                             @error('nilai_rincian') 
                                 <div class="invalid-feedback">

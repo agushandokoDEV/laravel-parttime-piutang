@@ -22,7 +22,7 @@ class SuratBpkdController extends Controller
         return view('nasabah.surat_bpkd', compact('no_skrd'));
     }
 
-    public function update(Request $request)
+    public function updateBACKUP(Request $request)
     {
         $request->validate([
             'usulans_id' => 'required',
@@ -48,6 +48,39 @@ class SuratBpkdController extends Controller
             'docs_skdp' => $docsName,
             'status' => 'proses'
         ]);
+        return back()->with(['message' => 'Berhasil mengirimkan surat usulan BPKD.']);
+    }
+
+    public function update(Request $request)
+    {
+        // $request->validate([
+        //     'usulans_id' => 'required',
+        //     'no_skrd' => 'required',
+        //     'tgl_surat' => 'required',
+        //     'docs_skdp' => 'required|mimes:pdf,docx'
+        // ], [
+        //     'usulans_id.required' => 'Anda harus mengirimkan surat permohonan dulu baru bisa mengusulkan surat ke BPKD.',
+        //     'tgl_surat.required' => 'Tanggal surat usulan ke BPKD tidak boleh kosong.',
+        //     'docs_skdp.required' => 'Dokumen usulan ke BPKD tidak boleh kosong.',
+        //     'docs_skdp.mimes' => 'Dokumen usulan ke BPKD hanya boleh berformat PDF, docx',
+        //     'no_skrd.required' => 'No SKRD tidak boleh kosong'
+        // ]);
+
+        // $id=[5,6];
+        $id=explode(',',$request->usulans_id);
+        $data = SuratUsulan::whereIn('id',$id)->get();
+
+        $file = $request->file('docs_skdp');
+        $docsName = Str::random(6) . '.' . $file->getClientOriginalExtension();
+        $file->storeAs('public/surat/skdp/', $docsName);
+
+
+        $data = SuratUsulan::whereIn('id', $id)->update([
+            'tgl_surat' => $request->tgl_surat,
+            'docs_skdp' => $docsName,
+            'status' => 'proses'
+        ]);
+
         return back()->with(['message' => 'Berhasil mengirimkan surat usulan BPKD.']);
     }
 }

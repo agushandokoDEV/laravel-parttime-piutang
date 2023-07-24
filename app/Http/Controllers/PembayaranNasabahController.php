@@ -18,7 +18,7 @@ class PembayaranNasabahController extends Controller
 
     public function index()
     {
-        $skrd = SuratUsulan::where('users_id', '=', Auth::user()->id)->get(['id', 'no_skrd']);
+        $skrd = SuratUsulan::where('users_id', '=', Auth::user()->id)->groupby('nomor_surat')->get(['id', 'nomor_surat']);
         return view('nasabah.pembayaran', compact('skrd'));
     }
 
@@ -42,14 +42,22 @@ class PembayaranNasabahController extends Controller
         $file = $request->file('docs_bayar');
         $docsName = Str::random(5) . '.' . $file->getClientOriginalExtension();
         $file->storeAs('public/pembayaran/', $docsName);
+        $usulan_id=$request->usulans_id;
+        $usulan=SuratUsulan::find($usulan_id);
 
-        $data = Pembayaran::with('usulan')->create([
-            'usulans_id' => $request->usulans_id,
-            'penanggung_jawab' => $request->penanggung_jawab,
-            'tgl_bayar' => Carbon::now(),
-            'nominal_bayar' => str_replace('.', '', $request->nominal_bayar),
-            'docs_bayar' => $docsName
-        ]);
-        return back()->with(['success' => 'Berhasil Melakukan Pembayaran Dengan Nomor Surat Piutang ' . $data->usulan->nomor_surat]);
+        $data=SuratUsulan::where('nomor_surat',$usulan->nomor_surat)->get();
+        // dd($data);
+        if(count($data) > 0){
+            foreach ($data as $item) {
+                Pembayaran::with('usulan')->create([
+                    'usulans_id' => $item->id,
+                    'penanggung_jawab' => $request->penanggung_jawab,
+                    'tgl_bayar' => Carbon::now(),
+                    'nominal_bayar' => str_replace('.', '', $request->nominal_bayar),
+                    'docs_bayar' => $docsName
+                ]);
+            }
+        }
+        return back()->with(['success' => 'Berhasil Melakukan Pembayaran Dengan Nomor Surat Piutang ' . $usulan->nomor_surat]);
     }
 }

@@ -23,16 +23,22 @@
             <span>Usulan</span>
         </a>
     </li>
+    <li class="nav-item {{request()->is('admin/berita-acara') ? 'active' : ''}}">
+        <a class="nav-link" href="{{url('/admin/berita-acara')}}">
+            <i class="fas fa-fw fa-plus"></i>
+            <span>Berita Acara</span>
+        </a>
+    </li>
     <li class="nav-item {{request()->is('admin/usulan-knkpl') ? 'active' : ''}}">
         <a class="nav-link" href="{{url('/admin/usulan-knkpl')}}">
             <i class="fas fa-fw fa-envelope"></i>
-            <span>Surat Usulan KNKPL</span>
+            <span>Surat ke PUPN</span>
         </a>
     </li>
     <li class="nav-item {{request()->is('admin/balasan-knkpl') ? 'active' : ''}}">
         <a class="nav-link" href="{{url('/admin/balasan-knkpl')}}">
             <i class="fas fa-fw fa-envelope"></i>
-            <span>Surat Balasan KNKPL</span>
+            <span>Surat dari PUPN</span>
         </a>
     </li>
     <li class="nav-item {{request()->is('admin/keputusan') ? 'active' : ''}}">
@@ -41,12 +47,7 @@
             <span>Keputusan gubernur</span>
         </a>
     </li>
-    <li class="nav-item {{request()->is('admin/berita-acara') ? 'active' : ''}}">
-        <a class="nav-link" href="{{url('/admin/berita-acara')}}">
-            <i class="fas fa-fw fa-plus"></i>
-            <span>Berita Acara</span>
-        </a>
-    </li>
+
     <li class="nav-item {{request()->is('admin/laporan') ? 'active' : ''}}">
         <a class="nav-link" href="{{url('/admin/laporan')}}">
             <i class="fas fa-fw fa-file"></i>
@@ -54,7 +55,7 @@
         </a>
     </li>
     @else
-    <li class="nav-item {{request()->is('nasabah/home') ? 'active' : ''}}">
+    <li class="nav-item {{request()->is('nasabah/home*') ? 'active' : ''}}">
         <a class="nav-link" href="{{url('/nasabah/home')}}">
             <i class="fas fa-fw fa-home"></i>
             <span>Home</span>
@@ -64,28 +65,34 @@
     <div class="sidebar-heading">
         Menu
     </div>
-    <li class="nav-item {{request()->is('nasabah/usulan') ? 'active' : ''}}">
+    <li class="nav-item {{request()->is('nasabah/usulan*') ? 'active' : ''}}">
         <a class="nav-link" href="{{url('/nasabah/usulan')}}">
             <i class="fas fa-fw fa-list-alt"></i>
             <span>Tambah Data Usulan</span>
         </a>
     </li>
-    <li class="nav-item {{request()->is('nasabah/surat-bpkd') ? 'active' : ''}}">
+    <li class="nav-item {{request()->is('nasabah/surat-bpkd*') ? 'active' : ''}}">
         <a class="nav-link" href="{{url('/nasabah/surat-bpkd')}}">
             <i class="fas fa-fw fa-list-alt"></i>
             <span>Surat Ke BPKD</span>
         </a>
     </li>
-    <li class="nav-item {{request()->is('nasabah/status-usulan') ? 'active' : ''}}">
+    <li class="nav-item {{request()->is('nasabah/status-usulan*') ? 'active' : ''}}">
         <a class="nav-link" href="{{url('/nasabah/status-usulan')}}">
             <i class="fas fa-fw fa-list-alt"></i>
             <span>Status Usulan</span>
         </a>
     </li>
-    <li class="nav-item {{request()->is('nasabah/pembayaran') ? 'active' : ''}}">
+    <li class="nav-item {{request()->is('nasabah/pembayaran*') ? 'active' : ''}}">
         <a class="nav-link" href="{{url('/nasabah/pembayaran')}}">
             <i class="fas fa-fw fa-list-alt"></i>
             <span>Pembayaran</span>
+        </a>
+    </li>
+    <li class="nav-item {{request()->is('nasabah/laporan*') ? 'active' : ''}}">
+        <a class="nav-link" href="{{url('/nasabah/laporan')}}">
+            <i class="fas fa-fw fa-file"></i>
+            <span>Laporan</span>
         </a>
     </li>
     @endif

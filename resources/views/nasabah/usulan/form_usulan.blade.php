@@ -23,7 +23,7 @@
                 <div class="col-md-4">
                     <div class="form-group">
                         <label for="">Nomor Surat Permohonan</label>
-                        <input type="text" name="nomor_surat" value="{{\App\Models\SuratUsulan::generateNoSurat()}}" class="form-control @error('no_skrd') is-invalid @enderror">
+                        <input type="text" name="nomor_surat"  class="form-control @error('no_skrd') is-invalid @enderror">
                     </div>
                     @error('no_skrd')
                     <div class="invalid-feedback">

@@ -37,8 +37,8 @@
                             <select name="usulans_id" id="usulans_id" class="form-control @error('usulans_id') is-invalid @enderror">
                                 <option value="">Pilih No Surat Usulan</option>
                                 @foreach ($skpd as $item)
-                                    @if ($item->nomor_surat != null)
-                                        <option value="{{$item->id}}">{{$item->nomor_surat}}</option>
+                                    @if ($item->nomor_surat != null && $item->keputusan->count() == 0)
+                                        <option value="{{$item->nomor_surat}}">{{$item->nomor_surat}}</option>
                                     @endif
                                 @endforeach
                             </select>
@@ -51,14 +51,14 @@
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="">Nomor SPKD</label>
+                            <label for="">Nama Penanggung Utang</label>
                             <input type="text" name="no_skpd" id="no_skpd" class="form-control" disabled>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="">Nomor Surat Keputusan Gubernur</label>
-                            <input type="text" value="{{\App\Models\KeputusanGubernur::generateKeputusan()}}" name="nomor_keputusan" id="nomor_keputusan" class="form-control @error('nomor_keputusan') is-invalid @enderror">
+                            <input type="text" name="nomor_keputusan" id="nomor_keputusan" class="form-control @error('nomor_keputusan') is-invalid @enderror">
                             @error('nomor_keputusan')
                              <div class="invalid-feedback">
                                 {{$message}}
@@ -79,8 +79,8 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="">Upload Dokumen Usulan</label>
-                    <input type="file" name="docs_keputusan" class="form-control @error('docs_keputusan') is-invalid @enderror">
+                    <label for="">Upload Surat Keputusan Gubernur</label>
+                    <input type="file" name="docs_keputusan" accept="application/pdf" class="form-control @error('docs_keputusan') is-invalid @enderror">
                     @error('docs_keputusan')
                      <div class="invalid-feedback">
                         {{$message}}
@@ -98,4 +98,9 @@
 @push('js')
     <script src="{{asset('vendor/select2/dist/js/select2.min.js')}}"></script>
     <script src="{{asset('js/usulan_knkpl.js')}}"></script>
+    <script>
+        $(function(){
+            $("#usulans_id").val("{{ app('request')->input('no_surat') }}").trigger('change');
+        })
+    </script>
 @endpush

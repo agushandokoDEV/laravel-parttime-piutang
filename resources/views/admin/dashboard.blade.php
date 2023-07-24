@@ -20,57 +20,85 @@
 @endpush
 
 @section('content')
-<div class="card mb-3">
-    <div class="card-body">
-        <form action="#">
-            <div class="form-group">
-                <label for="">Pilih No SKPD</label>
-                <select name="users_id" id="users_id" class="form-control">
-                    <option value="">Pilih No SKPD</option>
-                    @foreach ($skpd as $item)
-                    <option value="{{$item->id}}">{{$item->no_skpd}}</option>
-                    @endforeach
-                </select>
+<div class="row">
+<!-- Earnings (Monthly) Card Example -->
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <div class="row align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-uppercase mb-1">Earnings (Monthly)</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">$40,000</div>
+                        <div class="mt-2 mb-0 text-muted text-xs">
+                        <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> 3.48%</span>
+                        <span>Since last month</span>
+                        </div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-calendar fa-2x text-primary"></i>
+                    </div>
+                </div>
             </div>
-        </form>
+        </div>
     </div>
-</div>
-<div class="card mb-3">
-    <div class="card-header">
-        <b>Rekap Data Rincian Piutang Daerah Audited Tahun {{\Carbon\Carbon::now()->format('Y')}}</b>
+    <!-- Earnings (Annual) Card Example -->
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-uppercase mb-1">Sales</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">650</div>
+                        <div class="mt-2 mb-0 text-muted text-xs">
+                        <span class="text-success mr-2"><i class="fas fa-arrow-up"></i> 12%</span>
+                        <span>Since last years</span>
+                        </div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-shopping-cart fa-2x text-success"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="card-body">
-        <div class="table-responsive">
-            <table class="table table-hover table-bordered table-striped text-center nowrap" id="table">
-                <thead class="text-white bg-secondary">
-                    <tr>
-                        <th rowspan="3" style="vertical-align : middle;text-align:center;">No</th>
-                        <th rowspan="3" style="vertical-align : middle;text-align:center;">Nama SKPD</th>
-                        <th rowspan="3" style="vertical-align : middle;text-align:center;">No SKRD / RUPS / Kepgub / STS / SPS / PKS / Surat perjanjian / Surat Perikatan atau Dokumen yang Dipersamakan</th>
-                        <th colspan="7">Rincian Piutang</th>
-                        <th colspan="4">Pengelolaan Kualitas Piutang</th>
-                    </tr>
-                    <tr>
-                        <th rowspan="2" style="vertical-align : middle;text-align:center;">Tanggal</th>
-                        <th rowspan="2" style="vertical-align : middle;text-align:center;">Umur</th>
-                        <th rowspan="2" style="vertical-align : middle;text-align:center;">Jenis</th>
-                        <th rowspan="2" style="vertical-align : middle;text-align:center;">Penanggung</th>
-                        <th colspan="3">Nilai</th>
-                        <th rowspan="2" style="vertical-align : middle;text-align:center;">Lancar</th>
-                        <th rowspan="2" style="vertical-align : middle;text-align:center;">Kurang</th>
-                        <th rowspan="2" style="vertical-align : middle;text-align:center;">Diragukan</th>
-                        <th rowspan="2" style="vertical-align : middle;text-align:center;">Macet</th>
-                    </tr>
-                    <tr>
-                        <th>Pokok</th>
-                        <th>Denda</th>
-                        <th>Total</th>
-                    </tr>
-                </thead>
-                <tbody id="show-table">
-
-                </tbody>
-            </table>
+    <!-- New User Card Example -->
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-uppercase mb-1">New User</div>
+                        <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">366</div>
+                        <div class="mt-2 mb-0 text-muted text-xs">
+                        <span class="text-success mr-2"><i class="fas fa-arrow-up"></i> 20.4%</span>
+                        <span>Since last month</span>
+                        </div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-users fa-2x text-info"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Pending Requests Card Example -->
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-uppercase mb-1">Pending Requests</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">18</div>
+                        <div class="mt-2 mb-0 text-muted text-xs">
+                        <span class="text-danger mr-2"><i class="fas fa-arrow-down"></i> 1.10%</span>
+                        <span>Since yesterday</span>
+                        </div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-comments fa-2x text-warning"></i>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>

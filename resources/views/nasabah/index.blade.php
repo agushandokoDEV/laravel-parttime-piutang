@@ -3,7 +3,11 @@
 @section('title') Home @endsection
 
 @push('css')
-
+<style>
+    table.table-bordered.dataTable th, table.table-bordered.dataTable td{
+        border-left-width:1px;
+    }
+</style>
 @endpush
 
 @section('content')
@@ -18,7 +22,7 @@
                     <tr>
                         <th rowspan="3" style="vertical-align : middle;text-align:center;">No</th>
                         <th rowspan="3" style="vertical-align : middle;text-align:center;">Nama SKPD</th>
-                        <th rowspan="3" style="vertical-align : middle;text-align:center;">No SKRD / RUPS / Kepgub / STS / SPS / PKS / Surat perjanjian / Surat Perikatan atau Dokumen yang Dipersamakan</th>
+                        <th rowspan="3" style="vertical-align : middle;text-align:center;">No SKRD / RUPS / Kepgub / STS / SPS / PKS / <br>Surat perjanjian / Surat Perikatan atau Dokumen yang Dipersamakan</th>
                         <th colspan="7">Rincian Piutang</th>
                         <th colspan="4">Pengelolaan Kualitas Piutang</th>
                         <th rowspan="3">Status</th>
@@ -42,7 +46,7 @@
                     </tr>
                 </thead>
                 <tbody id="show-table">
-                    @if ($skpd[0]->users_id != null)
+                    @if ($skpd->count() > 0)
                         @foreach ($skpd as $item)
                             <tr>
                                 <td>{{$loop->iteration}}</td>
@@ -86,7 +90,7 @@
                         <th colspan="9">Jumlah</th>
                         <th colspan="6">Rp.{{number_format($sumSkpd)}}</th>
                         <th>
-                            <button class="btn btn-secondary" id="add"><i class="fas fa-plus"></i> Tambah Data Usulan</button>
+                            <button class="btn btn-light" id="add"><i class="fas fa-plus"></i> Tambah Data Usulan</button>
                         </th>
                     </tr>
                 </tfoot>
@@ -116,7 +120,7 @@
                 var name = $(this).data('name');
                 selectedIds.push(id);
                 selectednames.push(name);
-                
+
             });
 
             if (selectedIds.length == 0) {

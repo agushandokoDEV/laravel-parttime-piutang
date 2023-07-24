@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title') Surat Usulan KNKPL @endsection
+@section('title') Surat Usulan PUPN @endsection
 
 @push('css')
     <style>
@@ -25,7 +25,7 @@
     @endif
     <div class="card mb-3">
         <div class="card-header">
-            <b>Form Surat Usulan KNKPL</b>
+            <b>Form Surat Usulan PUPN</b>
         </div>
         <div class="card-body">
             <form action="{{url('/admin/usulan-knkpl')}}" method="POST" enctype="multipart/form-data">
@@ -38,8 +38,8 @@
                             <select name="usulans_id" id="usulans_id" class="form-control @error('usulans_id') is-invalid @enderror">
                                 <option value="">Pilih Surat Usulan</option>
                                 @foreach ($skpd as $item)
-                                    @if ($item->nomor_surat != null)
-                                        <option value="{{$item->id}}">{{$item->nomor_surat}}</option>
+                                    @if ($item->nomor_surat != null && $item->usulanKnkpl->count() == 0)
+                                        <option value="{{$item->nomor_surat}}">{{$item->nomor_surat}}</option>
                                     @endif
                                 @endforeach
                             </select>
@@ -58,8 +58,8 @@
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="">Nomor Surat Usulan</label>
-                            <input type="text" value="{{\App\Models\SuratUsulanKNKPL::generateKnkpl()}}" name="nomor_knkpl" id="nomor_knkpl" class="form-control @error('nomor_knkpl') is-invalid @enderror">
+                            <label for="">Nomor Surat Usulan ke PUPN</label>
+                            <input type="text"  name="nomor_knkpl" id="nomor_knkpl" class="form-control @error('nomor_knkpl') is-invalid @enderror">
                             @error('nomor_knkpl')
                              <div class="invalid-feedback">
                                 {{$message}}
@@ -78,16 +78,29 @@
                             @enderror
                         </div>
                     </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                        <label for="">Perihal Dokumen</label>
+                        <textarea name="rincian_usulan_knkpl" class="form-control @error('rincian_usulan_knkpl') is-invalid @enderror" cols="30" rows="3"></textarea>
+                        @error('rincian_usulan_knkpl')
+                        <div class="invalid-feedback">
+                            {{$message}}
+                        </div>
+                        @enderror
+                        </div>
+                    </div>
                 </div>
+               
                 <div class="form-group">
                     <label for="">Upload Dokumen Usulan</label>
-                    <input type="file" name="docs_knkpl" class="form-control @error('docs_knkpl') is-invalid @enderror">
+                    <input type="file" name="docs_knkpl" accept="application/pdf" class="form-control @error('docs_knkpl') is-invalid @enderror">
                     @error('docs_knkpl')
                      <div class="invalid-feedback">
                         {{$message}}
                      </div>
                     @enderror
                 </div>
+
                 <div class="mt-3">
                     <button type="submit" class="btn btn-primary float-right">Simpan</button>
                 </div>
@@ -99,4 +112,9 @@
 @push('js')
     <script src="{{asset('vendor/select2/dist/js/select2.min.js')}}"></script>
     <script src="{{asset('js/usulan_knkpl.js')}}"></script>
+    <script>
+        $(function(){
+            $("#usulans_id").val("{{ app('request')->input('no_surat') }}").trigger('change');
+        })
+    </script>
 @endpush

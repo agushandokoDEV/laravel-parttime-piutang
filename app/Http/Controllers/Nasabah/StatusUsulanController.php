@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\File_DL;
 use App\Models\File_ID;
 use App\Models\File_PPP;
+use App\Models\FileKriteriaLainnya;
 use App\Models\FileSTS;
 use App\Models\SuratUsulan;
 use Illuminate\Http\Request;
@@ -21,7 +22,7 @@ class StatusUsulanController extends Controller
 
     public function index()
     {
-        $piutang = SuratUsulan::with('usulanKnkpl', 'keputusan', 'file')
+        $piutang = SuratUsulan::with('usulanKnkpl', 'keputusan', 'file', 'file_kriteria')
             ->where('status', '=', 'proses')
             ->orWhere('status', '=', 'validate')
             ->where('users_id', '=', Auth::user()->id)
@@ -103,14 +104,15 @@ class StatusUsulanController extends Controller
                 'docs_DL' => $docsDL
             ]);
             return back()->with(['message' => 'Berhasil Menambahkan Kekurangan Dokumen.']);
-        } else if ($request->docs_lainnya) {
-            $file = $request->file('docs_lainnya');
-            $docsLainnya = Str::random(5) . '.' . $file->getClientOriginalExtension();
-            $file->storeAs('public/surat/docs_lainnya/', $docsLainnya);
+        } else if ($request->file) {
+            $file = $request->file('file');
+            $docsKriteria = Str::random(5) . '.' . $file->getClientOriginalExtension();
+            $file->storeAs('public/surat/kriteria_lainnya/', $docsKriteria);
 
-            $data->update([
-                'docs_lainnya' => $docsLainnya,
-            ]);
+            $uploadFile = new FileKriteriaLainnya();
+            $uploadFile->usulans_id = $data->id;
+            $uploadFile->file = $docsKriteria;
+            $uploadFile->save();
             return back()->with(['message' => 'Berhasil Menambahkan Kekurangan Dokumen.']);
         } else {
             return back()->with(['err' => 'Gagalam Menambahkan Kekurangan Dokumen.']);

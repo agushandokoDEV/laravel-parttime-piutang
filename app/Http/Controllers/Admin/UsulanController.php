@@ -3,14 +3,18 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\FileSTS;
+use App\Models\File_ID;
 use App\Models\JenisPiutang;
 use App\Models\Piutang;
 use App\Models\SuratUsulan;
+use App\Models\TagihanSuratUsulan;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use App\Models\Pemberitahuan;
 
 class UsulanController extends  Controller
 {
@@ -21,14 +25,49 @@ class UsulanController extends  Controller
 
     public function index(Request $request)
     {
-        $nasabah = User::where('role', '!=', 'admin')->get(['id', 'no_skpd']);
-        return view('admin.usulan.index', compact('nasabah'));
+        $piutang = SuratUsulan::with('jenisPiutang')->where('status', '=', 'proses')->orderBy('id', 'desc')->get();
+        // $piutang = SuratUsulan::select('nomor_surat','nama_peminjam','id_jenis','tgl_surat','status','created_at')
+        //     ->groupBy('nomor_surat','nama_peminjam','id_jenis','tgl_surat','status','created_at')
+        //     ->where('status','proses')
+        //     ->orderBy('created_at', 'desc')
+        //     ->get();
+
+
+        return view('admin.usulan.index', compact('piutang'));
     }
 
     public function showUsulan($id)
     {
-        $data = SuratUsulan::with('file', 'file_ST', 'file_DL', 'file_ID')->find($id);
+        $data = SuratUsulan::with('file', 'file_ST','doksts', 'file_DL', 'file_ID','file_kriteria','tagihan.surattagihan')->find($id);
+        $file_ID=File_ID::where('usulans_id',$id)->first();
+        $select_STS = [];
+        $select_DL = [];
+        $select_kriteria=[];
+        if($data->select_STS != null){
+            $select_STS=explode(',',$data->select_STS);
+        }
+        if ($data->select_DL != null) {
+            $select_DL = explode(',', $data->select_DL);
+        }
+        if ($data->select_kriteria != null) {
+            $select_kriteria = explode(',', $data->select_kriteria);
+        }
+
+        // $dok_sts=FileSTS::where('usulans_id',$id)->get();
+        // $tagihan_surat_usulan=TagihanSuratUsulan::where('usulans_id',$id)->get();
+        // dd($data->file_kriteria);
         $showFile = SuratUsulan::with('file', 'file_ST', 'file_DL', 'file_ID')->where('id', '=', $id)->get();
+        return view('admin.usulan.detail', compact('data', 'showFile','file_ID','select_STS','select_DL','select_kriteria'));
+    }
+
+    public function detailSuratUsulan(Request $request)
+    {
+        $id=$request->no;
+        $data = SuratUsulan::with('file', 'file_ST', 'file_DL', 'file_ID')->where('nomor_surat',$id)->first();
+        $list = SuratUsulan::with('file', 'file_ST', 'file_DL', 'file_ID')->where('nomor_surat',$id)->get();
+
+        $showFile = SuratUsulan::with('file', 'file_ST', 'file_DL', 'file_ID')->where('id', '=', $data->id)->get();
+        // dd($showFile);
         return view('admin.usulan.detail', compact('data', 'showFile'));
     }
 
@@ -268,5 +307,35 @@ class UsulanController extends  Controller
             'code' => 200,
             'data' => $data
         ]);
+    }
+
+
+    public function statusAjuan(Request $request)
+    {
+        $id=$request->id;
+        $status=$request->stts_ajuan;
+        $ket=$request->ket;
+
+        $usulan=SuratUsulan::find($id);
+
+        $param['status_ajuan']=$status;
+
+        $msg='';
+        if($status == 'tolak'){
+            $param['ket_tolak']=$ket;
+            $msg='Surat usulan telah ditolak dengan alasan '.$ket;
+        }else{
+            $param['ket_tolak']=null;
+            $msg='Surat usulan telah disetujui';
+        }
+        SuratUsulan::where('nomor_surat',$usulan->nomor_surat)->update($param);
+
+        $message = Pemberitahuan::create([
+            'users_id' => $usulan->users_id,
+            'usulans_id' => $usulan->id,
+            'message' => $msg
+        ]);
+
+        return response()->json($msg);
     }
 }

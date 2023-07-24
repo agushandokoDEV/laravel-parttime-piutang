@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\Admin\{BalasanKNKPL, BeritaAcaraController, DashboardController, KeputusanGubernurController, LaporanController, UsulanController, UsulanKNKPLControler};
 use App\Http\Controllers\Auth\AuthController;
-use App\Http\Controllers\Nasabah\{GetNotifController, HomeController, StatusUsulanController, SuratBpkdController, UsulanNasabahController};
+use App\Http\Controllers\Nasabah\{GetNotifController, HomeController, StatusUsulanController, SuratBpkdController, UsulanNasabahController,LaporanController as LaporanNasabahController};
 use App\Http\Controllers\PembayaranNasabahController;
 use Illuminate\Support\Facades\Route;
 
@@ -35,6 +35,7 @@ Route::group(['prefix' => 'admin'], function () {
     Route::get('/usulan/next_4/{id}', [UsulanController::class, 'showNext4']);
     Route::get('/usulan/save/{id}', [UsulanController::class, 'save']);
     Route::get('/detail-usulan/{id}', [UsulanController::class, 'showUsulan']);
+    Route::get('/detail-surat-usulan', [UsulanController::class, 'detailSuratUsulan']);
 
     Route::put('/usulan/next/{id}/update_1', [UsulanController::class, 'usulanUpdate_1']);
     Route::put('/usulan/next/{id}/update_2', [UsulanController::class, 'usulanUpdate_2']);
@@ -62,16 +63,19 @@ Route::group(['prefix' => 'admin'], function () {
     Route::get('/laporan', [LaporanController::class, 'index']);
     Route::get('/laporan/export', [LaporanController::class, 'export']);
     Route::get('/laporan/cetak', [LaporanController::class, 'cetak']);
+
+    Route::post('/usulan/status-ajuan', [UsulanController::class, 'statusAjuan']);
 });
 
 // route nasabah
 Route::group(['prefix' => 'nasabah'], function () {
     Route::get('/home', [HomeController::class, 'index']);
-    
+
     Route::get('/home/getUsulan/{id}', [HomeController::class, 'getUsulan']);
     Route::get('/home/usulan', [HomeController::class, 'usualan']);
 
     Route::post('/home/update/{id}', [HomeController::class, 'updateUsulan']);
+    Route::put('/home/usulan/simpan', [HomeController::class, 'simpanUsulan']);
 
     // usulan list
     Route::get('/usulan', [UsulanNasabahController::class, 'index']);
@@ -80,6 +84,19 @@ Route::group(['prefix' => 'nasabah'], function () {
     Route::get('/usulan/surat/next3/{id}', [UsulanNasabahController::class, 'nextUsulan3']);
     Route::get('/usulan/surat/next4/{id}', [UsulanNasabahController::class, 'nextUsulan4']);
     Route::get('/usulan/surat/next5/{id}', [UsulanNasabahController::class, 'nextUsulan5']);
+
+
+    //usulan list V2
+    Route::get('/surat-usulan/step2', [UsulanNasabahController::class, 'usualan2']);
+    Route::post('/surat-usulan/step2', [UsulanNasabahController::class, 'saveUsualan2']);
+    Route::get('/surat-usulan/step3', [UsulanNasabahController::class, 'usulan3']);
+    Route::post('/surat-usulan/step3', [UsulanNasabahController::class, 'saveUsualan3']);
+    Route::get('/surat-usulan/step4', [UsulanNasabahController::class, 'usulan4']);
+    Route::post('/surat-usulan/step4', [UsulanNasabahController::class, 'saveUsualan4']);
+    Route::get('/surat-usulan/step5', [UsulanNasabahController::class, 'usulan5']);
+    Route::post('/surat-usulan/step5', [UsulanNasabahController::class, 'saveUsualan5']);
+    Route::get('/surat-usulan/step6', [UsulanNasabahController::class, 'usulan6']);
+    Route::post('/surat-usulan/step6', [UsulanNasabahController::class, 'saveUsualan6']);
 
     Route::post('/usulan/surat', [UsulanNasabahController::class, 'storeUsulan']);
     Route::put('/usulan/surat/next2/{id}/update', [UsulanNasabahController::class, 'storeNext2'])->name('next2');
@@ -99,12 +116,17 @@ Route::group(['prefix' => 'nasabah'], function () {
     // pembayaran
     Route::get('/pembayaran', [PembayaranNasabahController::class, 'index']);
     Route::post('/pembayaran', [PembayaranNasabahController::class, 'store']);
+
+    Route::get('/laporan', [LaporanNasabahController::class, 'index']);
+    Route::get('/laporan/export', [LaporanNasabahController::class, 'export']);
+    Route::get('/laporan/cetak', [LaporanNasabahController::class, 'cetak']);
 });
 
 // route get data json jQuery
 Route::group(['prefix' => 'json'], function () {
     Route::post('/piutangs', [UsulanController::class, 'getPiutangs']);
     Route::post('/piutangsById', [UsulanKNKPLControler::class, 'getPiutangsById']);
+    Route::post('/piutangsByNoSurat', [UsulanKNKPLControler::class, 'getPiutangsByNoSurat']);
 
     //usulan
     Route::get('/usulanById/{id}', [UsulanNasabahController::class, 'getUsulanById']);

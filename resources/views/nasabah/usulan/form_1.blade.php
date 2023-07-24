@@ -14,7 +14,7 @@
 @endif
 <div class="card mb-3">
     <div class="card-header">
-        <b>Dokumen Yang Harus Di Serahkan</b>
+        <b>Dokumen Yang Harus Di Serahkan {{Auth::user()->name}}</b>
     </div>
     <div class="card-body">
         <form action="{{url('/nasabah/usulan/surat')}}" method="POST" enctype="multipart/form-data">
@@ -40,7 +40,7 @@
                 </div>
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label for="">Tanggal</label>
+                        <label for="">Tanggal Usulan</label>
                         <input type="date" name="tgl_surat" disabled value="{{date('Y-m-d')}}" class="form-control @error('tgl_surat') is-invalid @enderror">
                         @error('tgl_surat')
                         <div class="invalid-feedback">

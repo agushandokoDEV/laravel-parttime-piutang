@@ -12,6 +12,15 @@ class SuratUsulan extends Model
     protected $guarded = [];
     protected $hidden = ['created_at', 'updated_at'];
 
+    protected $casts = [
+        'rincian_perihal' => 'array',
+    ];
+
+    // public function getRincianPerihalAttribute($value)
+    // {
+    //     return json_decode($value);
+    // }
+
     public function user()
     {
         return $this->belongsTo(User::class, 'users_id', 'id');
@@ -67,9 +76,14 @@ class SuratUsulan extends Model
         return $this->hasMany(File_ID::class, 'usulans_id', 'id');
     }
 
+    public function file_kriteria()
+    {
+        return $this->hasMany(FileKriteriaLainnya::class, 'usulans_id', 'id');
+    }
+
     public static function generateNoSurat()
     {
-        $lastSurat = self::orderBy('id','DESC')->first();
+        $lastSurat = self::orderBy('id', 'DESC')->first();
 
         if ($lastSurat) {
             $usulanID = $lastSurat->id + 1;
@@ -77,7 +91,17 @@ class SuratUsulan extends Model
             $usulanID = 1;
         }
 
-        $surateCode = 'USL-' . date('d.m.y') . '/' . str_pad($usulanID, 4, '0', STR_PAD_LEFT);
+        $surateCode = 'USL-' . date('d.m.y') . '.' . date('H') . '/' . str_pad($usulanID, 4, '0', STR_PAD_LEFT);
         return $surateCode;
+    }
+
+    public function tagihan()
+    {
+        return $this->hasMany(TagihanSuratUsulan::class, 'usulans_id', 'id');
+    }
+
+    public function doksts()
+    {
+        return $this->hasMany(FileSTS::class, 'usulans_id', 'id');
     }
 }

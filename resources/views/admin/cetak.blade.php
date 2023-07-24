@@ -34,8 +34,8 @@
           <th rowspan="2" class="bg-warning text-white">Nama</th>
           <th colspan="3" class="bg-warning text-white">Usulan Ke BPKD</th>
           <th colspan="3" class="bg-info text-white">Rincian Piutang</th>
-          <th colspan="2" class="bg-success text-white">Usulan KNKPL</th>
-          <th colspan="2" class="bg-success text-white">Balasan KNKPL</th>
+          <th colspan="2" class="bg-success text-white">Usulan PUPN</th>
+          <th colspan="2" class="bg-success text-white">Balasan PUPN</th>
           <th colspan="2" class="bg-success text-white">Pembayaran</th>
           <th colspan="2" class="bg-success text-white">Keputusan</th>
         </tr>

@@ -18,7 +18,8 @@ class BalasanKNKPL extends Controller
 
     public function index()
     {
-        $skpd = SuratUsulan::all();
+        // $skpd = SuratUsulan::with('balasanKnkpl')->get();
+        $skpd = SuratUsulan::select('nomor_surat')->whereNotNull('nomor_surat')->groupBy('nomor_surat')->get();
         return view('admin.balasanKNKPL.index', compact('skpd'));
     }
 
@@ -29,32 +30,46 @@ class BalasanKNKPL extends Controller
             'nomor_balasan' => 'required',
             'tgl_balasan' => 'required',
             'docs_balasan' => 'required|mimes:pdf,docx',
-            'message' => 'required'
+            'message' => 'required',
+            'rincian_balasan' => 'required'
         ], [
             'usulans_id.required' => 'Pilih salah satu SPKD',
             'nomor_balasan.required' => 'Nomor Balasan KNKPL tidak boleh kosong.',
             'tgl_balasan.required' => 'Tanggal Balasan KNKPL tidak boleh kosong.',
             'docs_balasan.required' => 'Dokumen Balasan KNKPL tidak boleh kosong.',
-            'message.required' => 'Silahkan Isi Pesan'
+            'message.required' => 'Silahkan Isi Pesan',
+            'rincian_balasan.required' => 'SIlahkan Isi Rincian'
         ]);
 
         $file = $request->file('docs_balasan');
         $docsName = Str::random(5) . '.' . $file->getClientOriginalExtension();
         $file->storeAs('public/surat/balasan_knkpl/', $docsName);
 
-        $data = SuratBalasanKNKPL::create([
-            'usulans_id' => $request->usulans_id,
-            'nomor_balasan' => $request->nomor_balasan,
-            'tgl_balasan' => $request->tgl_balasan,
-            'docs_balasan' => $docsName,
-        ]);
 
+        $surat_usulan = SuratUsulan::where('nomor_surat', $request->usulans_id)->get();
+        if (count($surat_usulan) > 0) {
+            foreach ($surat_usulan as $item) {
+
+                // SuratBalasanKNKPL::where('usulans_id', $item->id)->delete();
+                $data = SuratBalasanKNKPL::create([
+                    'usulans_id' => $item->id,
+                    'nomor_balasan' => $request->nomor_balasan,
+                    'tgl_balasan' => $request->tgl_balasan,
+                    'docs_balasan' => $docsName,
+                    'rincian_balasan' => $request->rincian_balasan
+                ]);
+            }
+        }
+
+
+        $usulan = SuratUsulan::where('nomor_surat', $request->usulans_id)->first();
         $message = Pemberitahuan::create([
             'users_id' => $request->users_id,
-            'usulans_id' => $request->usulans_id,
+            'usulans_id' => $usulan->id,
             'message' => $request->message
         ]);
 
-        return back()->with(['message' => 'Berhasil membuat surat balasan KNKPL dengan nomor surat ' . $data->nomor_balasan]);
+        // return back()->with(['message' => 'Berhasil membuat surat balasan KNKPL dengan nomor surat ' . $data->nomor_balasan]);
+        return redirect('/admin/keputusan?no_surat=' . $request->usulans_id)->with(['message' => 'Berhasil membuat surat balasan PUPN dengan nomor surat ' . $request->nomor_balasan]);
     }
 }

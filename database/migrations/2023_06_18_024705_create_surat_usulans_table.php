@@ -24,11 +24,13 @@ class CreateSuratUsulansTable extends Migration
             $table->string('rincian');
             $table->decimal('denda', 10, 2)->nullable();
             $table->date('tgl_surat');
+            $table->date('tgl_usulan');
             $table->decimal('nilai_rincian', 10, 2);
             $table->decimal('total_rincian', 10, 2);
             $table->longText('select_STS')->nullable();
             $table->string('select_ST')->nullable();
             $table->string('select_DL')->nullable();
+            $table->longText('select_kriteria')->nullable();
             $table->string('docs_skdp')->nullable();
             $table->string('docs_lainnya')->nullable();
             $table->enum('status', ['ongoing', 'proses', 'validate'])->default('ongoing');

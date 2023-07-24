@@ -73,12 +73,45 @@ class HomeController extends Controller
         $data['total_rincian']=collect($list)->sum('total_rincian');
         $data['nilai_rincian']=collect($list)->sum('nilai_rincian');
         $data['denda']=collect($list)->sum('denda');
-        // dd($data);
-        return view('nasabah.usulan.form_usulan_v2')->with($data);
+
+        return view('nasabah.usulan.v2.form_usulan')->with($data);
     }
 
     public function simpanUsulan(Request $request)
     {
-        // code...
+    
+        $request->validate([
+            'id' => 'required|array',
+            'nomor_surat' => 'required',
+            'rincian' => 'required',
+            'tgl_usulan' => 'required', 
+            'nilai_rincian' => 'required'
+        ]);
+       
+        for ($i=0; $i < count($request->id); $i++) { 
+            $rincian = str_replace('.', '', $request->nilai_rincian[$i]);
+            $total = str_replace('.', '', $request->total_rincian[$i]);
+            $data = SuratUsulan::find($request->id[$i]);
+
+            // $p=$data->rincian_perihal;
+            // // $p=array($request->rincian[$i]);
+            // array_push($p,$request->rincian[$i]);
+            // dd($p);
+
+            $rincian_perihal[]=array(
+                'step'=>1,
+                'perihal'=>$request->rincian[$i]
+            );
+            $data->update([
+                'nomor_surat' => $request->nomor_surat[$i],
+                // 'rincian' => $request->rincian[$i],
+                'rincian_perihal' => $rincian_perihal,
+                'nilai_rincian' => $rincian,
+                'tgl_usulan' => $request->tgl_usulan[$i],
+                'total_rincian' => $total 
+            ]);
+        }
+
+        return redirect('/nasabah/surat-usulan/step2?id=' . implode(",", $request->id));
     }
 }

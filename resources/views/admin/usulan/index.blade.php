@@ -1,5 +1,5 @@
 @extends('layouts.app')
- 
+
 @section('title') Usulan @endsection
 
 @push('css')
@@ -18,47 +18,50 @@
 @endpush
 
 @section('content')
-    <div class="card mb-3">
-        <div class="card-body">
-            <form action="#" class="form-select">
-                <div class="form-group">
-                    <label for="">Pilih SKPD</label>
-                    <select class="form-control" name="users_id" id="users_id">
-                        <option value="">Pilih SKPD</option>
-                        @foreach ($nasabah as $item)
-                            <option value="{{$item->id}}">{{$item->no_skpd}}</option>
-                        @endforeach
-                    </select>
-                </div>
-            </form>
-        </div>
-    </div>
-
     @if (session()->has('message'))
         <div class="alert alert-success">
             {{session()->get('message')}}
         </div>
     @endif
-
     <div class="card mb-3">
         <div class="card-body">
             <div class="table-responsive">
-                <table class="table table-bordered table-hover" style="width:100%;" id="usulan">
-                    <thead class="bg-primary text-white">
+                <table class="table table-bordered table-hover text-center nowrap" style="width:100%;" id="usulan">
+                    <thead class="bg-primary text-white text-center">
                         <tr>
-                            <th class="text-center">No</th>
-                            <th>No SKPD</th>
-                            <th>Nama SKPD</th>
+                            <th>No</th>
+                            <th>No SKRD</th>
+                            <th>No Usulan</th>
                             <th>Penanggung Hutang</th>
-                            <th class="text-center">Tanggal</th>
+                            <th>Tanggal</th>
                             <th>Jenis Piutang</th>
-                            <th class="text-center">Umur Piutang</th>
-                            <th class="text-center">Pokok</th>
-                            <th class="text-center">Action</th>
+                            <th>Pokok</th>
+                            <th>Status</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
-                    <tbody id="piutangs">
-                        
+                    <tbody>
+                        @foreach ($piutang as $item)
+                            <tr>
+                                <td>{{$loop->iteration}}</td>
+                                <td>{{$item->no_skrd}}</td>
+                                <td>{{$item->nomor_surat}}</td>
+                                <td>{{$item->nama_peminjam}}</td>
+                                <td>{{\Carbon\Carbon::parse($item->tgl_surat)->translatedFormat('d-F-Y')}}</td>
+                                <td>{{$item->jenisPiutang->jenis}}</td>
+                                <td>Rp.{{number_format($item->nilai_rincian, 0,'','.')}}</td>
+                                <td>
+                                    @if ($item->status == 'validate')
+                                        <span class="badge bg-success p-2 text-white">Di Terima</span>
+                                    @else
+                                        <span class="badge bg-warning p-2 text-white">Pengajuan</span>
+                                    @endif
+                                </td>
+                                <td>
+                                    <a href="{{url('/admin/detail-usulan/'.$item->id)}}" class="btn btn-info btn-sm"><i class="fas fa-eye"></i></a>
+                                </td>
+                            </tr>
+                        @endforeach
                     </tbody>
                 </table>
             </div>

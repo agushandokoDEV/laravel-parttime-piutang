@@ -32,14 +32,36 @@ $(document).ready(function () {
                 let html = '';
                 if (response.data.data.length > 0) {
                     $.each(response.data.data, function (key, val) {
-                        console.log(val);
+                        // console.log(val);
                     let tgl = val.created_at;
-                    let date = new Date(tgl); 
+                    let date = new Date(tgl);
                     let day = date.toLocaleString('id-ID', { weekday: 'long' });
                     let dayNumber = date.getDate();
                     let month = date.toLocaleString('id-ID', { month: 'long' });
                     let year = date.getFullYear();
-                    html += `<a class="dropdown-item d-flex align-items-center" href="#">
+
+                    let msg_kep_gub = val.message.includes("Surat keputusan Gubernur");
+                    let stts_usulan_setuju = val.message.includes("urat usulan telah ditolak");
+                    let stts_usulan_tolak = val.message.includes("urat usulan telah ditolak");
+                    
+                    
+                    if(msg_kep_gub || stts_usulan_setuju || stts_usulan_tolak){
+                        console.log('stts_usulan_setuju',stts_usulan_setuju);
+                    console.log('stts_usulan_tolak',stts_usulan_tolak);
+                    console.log('message',val.message)
+                        html += `<a class="dropdown-item d-flex align-items-center" href="#">
+                                <div class="mr-3">
+                                    <div class="icon-circle bg-primary">
+                                        <i class="fas fa-envelope text-white"></i>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="small text-gray-500">${day + ', ' + dayNumber + '-' + month + '-' + year}</div>
+                                    <span class="font-weight-bold">${val.message}</span>
+                                </div>
+                            </a>`
+                    }else{
+                        html += `<a class="dropdown-item d-flex align-items-center" href="#">
                                 <div class="mr-3">
                                     <div class="icon-circle bg-primary">
                                         <i class="fas fa-envelope text-white"></i>
@@ -50,6 +72,9 @@ $(document).ready(function () {
                                     <span class="font-weight-bold">Surat ${val.usulan.nomor_surat} Ada Yang Kurang!</span>
                                 </div>
                             </a>`
+                    }
+
+
                     });
                 } else {
                     html += `<a class="dropdown-item d-flex align-items-center" href="#">
@@ -62,7 +87,7 @@ $(document).ready(function () {
                                     <span class="font-weight-bold">Tidak Ada Pemberitahuan</span>
                                 </div>
                             </a>`
-                    
+
                 }
                 $('#notif').html(html)
             },
@@ -71,22 +96,4 @@ $(document).ready(function () {
             }
         })
     }
-
-    $(document).on('click', '#cekNotif', function (e) {
-        let id = $(this).data('id');
-        window.location.href = '/nasabah/status-usulan/dokumen/' + id
-        // $.ajax({
-        //     url: '/json/notif/' + id,
-        //     method: 'GET',
-        //     success: function (response) {
-        //         console.log(response);
-        //         $('#notifModal').modal('show');
-        //         $('#notifModalLabel').html('Surat Usulan ' + response.data.usulan.nomor_surat);
-        //         $('#pesan').html(response.data.message);
-        //     },
-        //     error: function (err) {
-        //         console.log(err);
-        //     }
-        // })
-    });
 });

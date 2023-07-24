@@ -33,11 +33,11 @@
         <form action="{{url('/nasabah/pembayaran')}}" method="POST" enctype="multipart/form-data">
             @csrf
             <div class="form-group">
-                <label for="">Pilih No SKRD</label>
+                <label for="">Pilih No Surat Usulan</label>
                 <select name="usulans_id" id="usulans_id" class="form-control @error('usulans_id') is-invalid @enderror">
-                    <option value="">Pilih No SKRD</option>
+                    <option value="">Pilih No Surat Usulan</option>
                     @foreach($skrd as $item)
-                        <option value="{{$item->id}}">{{$item->no_skrd}}</option>
+                        <option value="{{$item->id}}">{{$item->nomor_surat}}</option>
                     @endforeach
                 </select>
                 @error('usulans_id')
@@ -50,7 +50,7 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="">Nama Penanggung Jawab</label>
+                            <label for="">Nama Penanggung Utang</label>
                             <input type="text" name="penanggung_jawab" id="penanggung_jawab" class="form-control @error('penanggung_jawab') is-invalid @enderror">
                             @error('penanggung_jawab')
                             <div class="invalid-feedback">
@@ -91,7 +91,7 @@
                     <div class="col-md-12">
                         <div class="form-group">
                             <label for="">Dokumen Pembayaran</label>
-                            <input type="file" name="docs_bayar" class="form-control @error('docs_bayar') is-invalid @enderror">
+                            <input type="file" name="docs_bayar" accept="application/pdf" class="form-control @error('docs_bayar') is-invalid @enderror">
                             @error('docs_bayar')
                             <div class="invalid-feedback">
                                 {{$message}}

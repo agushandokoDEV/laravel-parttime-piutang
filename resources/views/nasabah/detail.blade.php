@@ -85,11 +85,11 @@
                     </tr>
                     <tr>
                         <td class="text-center">6</td>
-                        <td>Dokumen Lainnya</td>
-                        <td class="text-center"><input type="checkbox" @if ($data->docs_lainnya != null)
+                        <td>dokumen pendukung lainnya </td>
+                        <td class="text-center"><input type="checkbox" @if ($data->file_kriteria->count() != 0)
                             checked
                             @endif></td>
-                        <td class="text-center"><input type="checkbox" @if ($data->docs_lainnya == null)
+                        <td class="text-center"><input type="checkbox" @if ($data->file_kriteria->count() == 0)
                             checked
                             @endif></td>
                     </tr>
@@ -104,7 +104,7 @@
     </div>
 </div>
 
-@if ($data->file_ID->count() == 0 || $data->docs_skdp == null || $data->file->count() == 0 || $data->file_ST->count() == 0 || $data->file_DL->count() == 0 || $data->docs_lainnya == null)
+@if ($data->file_ID->count() == 0 || $data->docs_skdp == null || $data->file->count() == 0 || $data->file_ST->count() == 0 || $data->file_DL->count() == 0 || $data->file_kriteria->count() == 0)
 <div class="card mb-3">
     <div class="card-header">
         <b>Form Upload Kekurangan Dokumen Surat Permohonan</b>
@@ -185,10 +185,10 @@
             <!-- document DL -->
 
             <!-- document lainnya -->
-            @if ($data->docs_lainnya == null)
+            @if ($data->file_kriteria->count() == 0)
             <div class="form-group">
-                <label for="">Upload Dokumen lainnya</label>
-                <input type="file" class="form-control @error('docs_lainnya') is-invalid @enderror" name="docs_lainnya">
+                <label for="">Upload dokumen pendukung lainnya </label>
+                <input type="file" class="form-control @error('docs_lainnya') is-invalid @enderror" name="file">
                 @error('docs_lainnya')
                 <div class="invalid-feedback">
                     {{$message}}

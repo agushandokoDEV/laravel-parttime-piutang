@@ -37,8 +37,8 @@
                             <select name="usulans_id" id="usulans_id" class="form-control @error('usulans_id') is-invalid @enderror">
                                 <option value="">Pilih No Surat Usulan</option>
                                 @foreach ($skpd as $item)
-                                    @if ($item->nomor_surat != null)
-                                        <option value="{{$item->id}}">{{$item->nomor_surat}}</option>
+                                    @if ($item->nomor_surat != null && $item->beritaAcara->count() == 0)
+                                        <option value="{{$item->nomor_surat}}">{{$item->nomor_surat}}</option>
                                     @endif
                                 @endforeach
                             </select>
@@ -63,7 +63,7 @@
                 </div>
                 <div class="form-group">
                     <label for="">Upload Dokumen Usulan</label>
-                    <input type="file" name="docs_berita" class="form-control @error('docs_berita') is-invalid @enderror">
+                    <input type="file" name="docs_berita" accept="application/pdf" class="form-control @error('docs_berita') is-invalid @enderror">
                     @error('docs_berita')
                      <div class="invalid-feedback">
                         {{$message}}
@@ -81,4 +81,5 @@
 @push('js')
     <script src="{{asset('vendor/select2/dist/js/select2.min.js')}}"></script>
     <script src="{{asset('js/usulan_knkpl.js')}}"></script>
+
 @endpush
